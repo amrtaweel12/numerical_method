@@ -12,8 +12,7 @@ def newton_method(cofficent, inital_guess = None, error_rate = 1e-6, max_iterati
     else :
         current_guess = inital_guess   
     yprime = polynomial_function.diff(x)
-    f_prime = lambdify(x, yprime, 'numpy')
-    power_of_boundary = 2   
+    f_prime = lambdify(x, yprime, 'numpy') 
     for i in range(max_iteration):
         f_value = np.polyval(cofficent,current_guess)
         f_prime_value = f_prime(current_guess)
@@ -22,7 +21,7 @@ def newton_method(cofficent, inital_guess = None, error_rate = 1e-6, max_iterati
             power_of_boundary += 1
             continue
         new_guess = current_guess - (f_value /f_prime_value)
-        if(np.polyval(cofficent,new_guess) < error_rate):
+        if(abs(np.polyval(cofficent,new_guess)) < error_rate):
             break
         current_guess = new_guess
         
