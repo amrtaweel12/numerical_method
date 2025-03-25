@@ -2,21 +2,31 @@ import numpy as np
 import random
 
 from sympy import *
-def newton_method(cofficent):
-    intial_value = random.random() * 10
+def newton_method(cofficent, inital_guess = None, error_rate = 1e-6, max_iteration = 1000000):
     x = Symbol('x')
-    degree = len(cofficent)
-    y = x
-    for i in range(degree):
-        y = y + (x** (degree - i)) * cofficent[i]
-    y = y -x
-    yprime = y.diff(x)
-    fprime = lambdify(x, yprime, 'numpy')
-    f_intial = np.polyval(cofficent, intial_value)
-    while abs(f_intial) > pow(10,-6):
-        intial_value = intial_value - (f_intial/fprime(intial_value))
-        f_intial =  np.polyval(cofficent, intial_value)
-    return intial_value       
+    degree = len(cofficent)-1
+    polynomial_function = sum((x**(degree - i)) * cofficent[i] for i in range(degree))
+
+    if(inital_guess == None) :
+        current_guess = random.uniform(-10,10)
+    else :
+        current_guess = inital_guess   
+    yprime = polynomial_function.diff(x)
+    f_prime = lambdify(x, yprime, 'numpy')
+    power_of_boundary = 2   
+    for i in range(max_iteration):
+        f_value = np.polyval(cofficent,current_guess)
+        f_prime_value = f_prime(current_guess)
+        if(f_prime_value == 0) :
+            current_guess =  random.uniform( -10 , 10)
+            power_of_boundary += 1
+            continue
+        new_guess = current_guess - (f_value /f_prime_value)
+        if(np.polyval(cofficent,new_guess) < error_rate):
+            break
+        current_guess = new_guess
+        
+    return current_guess       
 def main():
     cofficent =[]
     while(True) :
