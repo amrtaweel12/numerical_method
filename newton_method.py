@@ -13,7 +13,7 @@ def newton_method(cofficent):
     yprime = y.diff(x)
     fprime = lambdify(x, yprime, 'numpy')
     f_intial = np.polyval(cofficent, intial_value)
-    while f_intial > pow(10,-6):
+    while abs(f_intial) > pow(10,-6):
         intial_value = intial_value - (f_intial/fprime(intial_value))
         f_intial =  np.polyval(cofficent, intial_value)
     return intial_value       
